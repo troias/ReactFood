@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import CartContext from '../../../contextStore/CartContext'
 import classes from "../MealList/MealsList.module.css";
 import Card from "../../UI/Card/Card";
 import styles from "./MealItem.module.css";
@@ -6,6 +7,16 @@ import MealItemForm from "../MealItemForm/MealItemForm";
 
 const Meals = (props) => {
   const { name, description, price, id } = props.props;
+  const cartCTX = useContext(CartContext)
+
+  const addToCartHandler = (amount) => {
+    cartCTX.addItem({
+      id: id,
+      name: name, 
+      amount: amount,
+      price: price
+    })
+  }
 
   return (
     <div className={classes.meals}>
@@ -25,7 +36,7 @@ const Meals = (props) => {
             </li>
           </ul>
           <div className={styles[`vertical-center`]}>
-            <MealItemForm id={id}/>
+            <MealItemForm onAddtoCart={addToCartHandler} id={id}/>
           </div>
         </div>
       </Card>
