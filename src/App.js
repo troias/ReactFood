@@ -8,6 +8,7 @@ function App() {
 
   const [cartActive, setCartActive] = useState(false)
 
+
   const showCartHandler = (event) => {
     setCartActive(true)
   }
