@@ -43,6 +43,7 @@ const Cart = (props) => {
       }
       // const data = await res.json()
       setSuccess(true);
+      
     } catch (error) {
       setSuccess(false);
     }
@@ -63,6 +64,7 @@ const Cart = (props) => {
 
   const orderCartItems = () => {
     sendOrderInfo(orderCTX.order);
+    cartCTX.clearCart()
   };
 
   const validityChecker = (value) => {
@@ -133,8 +135,7 @@ const Cart = (props) => {
     <>
 
       <div className={classes.actions} style={{
-        display: "flex",
-       textAlign: "center"
+       justifyContent: 'center', display: 'flex'
       }}>
         Order Sent
         <button className={classes.button} onClick={props.onHideCart}>
