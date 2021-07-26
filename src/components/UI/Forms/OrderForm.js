@@ -46,36 +46,45 @@ const OrderForm = (props) => {
     isValid: enteredCityIsValid,
     // reset: enteredCityEmail
   } = useInput(cityInputValidator);
-  
 
+
+
+
+  const orderInfo = {
+    name: enteredNameValue,
+    email: enteredEmailValue,
+    city: enteredCityValue,
+    postalCode: enteredPostalCodeValue,
+  };
+
+
+  const sendOrderHandler = (event) => {
+    event.preventDefault();
+
+
+
+    props.orderHandler(orderInfo);
+    // console.log(orderInfo)
+  };
+ 
   const formValid =
     valueIsValid &&
     emailIsValid &&
     enteredCityIsValid &&
     enteredPostalCodeIsValid;
 
-  const sendOrderHandler = (event) => {
-    event.preventDefault();
 
-    const orderInfo = {
-      name: enteredNameValue,
-      email: enteredEmailValue,
-      city: enteredCityValue,
-      postalCode: enteredPostalCodeValue,
-    };
-
-    if (formValid) {
-      props.valid(true);
-    }
-
-    props.orderHandler(orderInfo);
-    // console.log(orderInfo)
-  };
+  if (formValid) {
+    props.valid(true);
+  }
+  const confirmationHandler = (event) => {
+    props.confirmation(true)
+  }
 
   return (
     <form className={classes.form} onSubmit={sendOrderHandler}>
 
-      <div className={classes.control}>
+      <div className={`${classes.control} ${valueIsValid ? "" : classes.invalid}`}>
         <label value="Name"> Name</label>
 
         <input
@@ -88,7 +97,7 @@ const OrderForm = (props) => {
         />
       </div>
 
-      <div className={classes.control}>
+      <div className={`${classes.control} ${emailIsValid ? "" : classes.invalid}`}>
         <label value="Name">Email</label>
 
         <input
@@ -101,7 +110,7 @@ const OrderForm = (props) => {
         />
       </div>
 
-      <div className={classes.control}>
+      <div className={`${classes.control} ${enteredPostalCodeIsValid ? "" : classes.invalid}`}>
         <label value="Name">Postal Code</label>
 
         <input
@@ -114,7 +123,7 @@ const OrderForm = (props) => {
         />
       </div>
 
-      <div className={classes.control}>
+      <div className={`${classes.control} ${enteredCityIsValid ? "" : classes.invalid}`}>
         <label value="Name">City</label>
 
         <input
@@ -132,18 +141,23 @@ const OrderForm = (props) => {
           {" "}
           Cancel
         </button>
-        {formValid && <button className={classes.submit}>Confirm </button>}
+        {formValid && <button className={classes.submit} onClick={confirmationHandler} >Confirm </button>}
       </div>
 
       <div className={classes.invalid}>
         {nameInputError && <label> Cannot be empty </label>}
+      </div>
+      <div className={classes.invalid}>
         {emailInputError && <label> Does not include "@" </label>}
+      </div>
+      <div className={classes.invalid}>
         {enteredPostalCodeInputError && (
           <label> Has to be a number over 1 and under 6 </label>
         )}
+      </div>
+      <div className={classes.invalid}>
         {enteredCityInputError && <label> Can't be empty </label>}
       </div>
-      
     </form>
   );
 };

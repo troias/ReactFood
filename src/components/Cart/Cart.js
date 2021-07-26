@@ -5,7 +5,7 @@ import CartContext from "../../contextStore/CartContext";
 import CartItem from "./CartItem/CartItem";
 import OrderForm from "../UI/Forms/OrderForm";
 import OrderContext from "../../contextStore/OrderContext";
-import modalsClasses from "../UI/Forms/Modal.css"
+import modalsClasses from "../UI/Forms/Modal.css";
 
 const Cart = (props) => {
   const cartCTX = useContext(CartContext);
@@ -13,12 +13,14 @@ const Cart = (props) => {
 
   const totalAmount = `$${cartCTX.totalAmount.toFixed(2)}`;
   const hasItems = cartCTX.items.length > 0;
-  // const hasOrderItems = orderCTX.items.length > 0
 
+  // const hasOrderItems = orderCTX.items.length > 0
+  const [confirmation, setConfirmation] = useState(false);
   const [success, setSuccess] = useState(false);
   const [valid, setValid] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  console.log("orderCTX", orderCTX)   
+  console.log("orderCTX", orderCTX);
 
   const requestConfig = (order) => {
     return {
@@ -30,6 +32,7 @@ const Cart = (props) => {
 
   const sendOrderInfo = async (order) => {
     try {
+      setIsSubmitting(true);
       const res = await fetch(
         "https://food-app-a635f-default-rtdb.firebaseio.com/order.json",
         requestConfig(order)
@@ -43,6 +46,7 @@ const Cart = (props) => {
     } catch (error) {
       setSuccess(false);
     }
+    setIsSubmitting(false);
   };
 
   const orderInfoHandler = (obj) => {
@@ -54,7 +58,7 @@ const Cart = (props) => {
       items: cartCTX.items,
       totalAmount: cartCTX.totalAmount,
     });
-   console.log("orderCTX.order",  orderCTX.order)
+    console.log("orderCTX.order", orderCTX.order);
   };
 
   const orderCartItems = () => {
@@ -63,6 +67,10 @@ const Cart = (props) => {
 
   const validityChecker = (value) => {
     setValid(value);
+  };
+
+  const confirmationChecker = (value) => {
+    setConfirmation(value);
   };
 
   const cartItemRemoveHandler = (id) => {
@@ -87,44 +95,61 @@ const Cart = (props) => {
     </ul>
   );
 
+  const cartModlaContent = (
+    <>
+      {cartItems}
+
+      {hasItems && (
+        <OrderForm
+          onClose={props.onHideCart}
+          valid={validityChecker}
+          orderHandler={orderInfoHandler}
+          confirmation={confirmationChecker}
+        />
+      )}
+
+      <div className={classes.total}>
+        <span>Total Amount</span>
+        <span>{totalAmount}</span>
+      </div>
+
+      <div className={classes.actions}>
+        <button className={classes[`button--alt`]} onClick={props.onHideCart}>
+          {" "}
+          Close
+        </button>
+        {hasItems && valid && confirmation && (
+          <button className={classes.button} onClick={orderCartItems}>
+            {" "}
+            Order
+          </button>
+        )}
+      </div>
+    </>
+  );
+
+  const isSubmittingModalContent = <p> Sending order data</p>;
+  const successSubmitted = (
+    <>
+
+      <div className={classes.actions} style={{
+        display: "flex",
+       textAlign: "center"
+      }}>
+        Order Sent
+        <button className={classes.button} onClick={props.onHideCart}>
+          Close
+        </button>
+      </div>
+    </>
+  );
   return (
     <>
-      {success ? (
-        <Modal> Success </Modal>
-      ) : (
-        <Modal onClose={props.onHideCart}>
-          {cartItems}
-
-          {hasItems && (
-            <OrderForm
-            onClose={props.onHideCart}
-              valid={validityChecker}
-              orderHandler={orderInfoHandler}
-            />
-          )}
-
-          <div className={classes.total}>
-            <span>Total Amount</span>
-            <span>{totalAmount}</span>
-          </div>
-
-          <div className={classes.actions}>
-            <button
-              className={classes[`button--alt`]}
-              onClick={props.onHideCart}
-            >
-              {" "}
-              Close
-            </button>
-            {hasItems && valid && (
-              <button className={classes.button} onClick={orderCartItems}>
-                {" "}
-                Order
-              </button>
-            )}
-          </div>
-        </Modal>
-      )}
+      <Modal onClose={props.onHideCart}>
+        {!isSubmitting && !success && cartModlaContent}
+        {isSubmitting && isSubmittingModalContent}
+        {!isSubmitting && success && successSubmitted}
+      </Modal>
     </>
   );
 };
