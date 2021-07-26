@@ -5,6 +5,7 @@ import CartContext from "../../contextStore/CartContext";
 import CartItem from "./CartItem/CartItem";
 import OrderForm from "../UI/Forms/OrderForm";
 import OrderContext from "../../contextStore/OrderContext";
+import modalsClasses from "../UI/Forms/Modal.css"
 
 const Cart = (props) => {
   const cartCTX = useContext(CartContext);

@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import useInput from "../../../customHooks/useInput";
+import classes from "./CheckOutForm.module.css";
 
 import {
   emailValidator,
@@ -45,6 +46,7 @@ const OrderForm = (props) => {
     isValid: enteredCityIsValid,
     // reset: enteredCityEmail
   } = useInput(cityInputValidator);
+  
 
   const formValid =
     valueIsValid &&
@@ -52,10 +54,9 @@ const OrderForm = (props) => {
     enteredCityIsValid &&
     enteredPostalCodeIsValid;
 
-
-
   const sendOrderHandler = (event) => {
     event.preventDefault();
+
     const orderInfo = {
       name: enteredNameValue,
       email: enteredEmailValue,
@@ -64,74 +65,85 @@ const OrderForm = (props) => {
     };
 
     if (formValid) {
-        props.valid(true);
-      }
+      props.valid(true);
+    }
 
     props.orderHandler(orderInfo);
     // console.log(orderInfo)
   };
 
-
   return (
-    <form>
-      <label value="Name"> Name</label>
-      <br />
-      <input
-        placeholder="Name"
-        type="text"
-        id="name"
-        value={enteredNameValue}
-        onChange={nameChangeHandler}
-        onBlur={nameInputBlurHandler}
-      />
+    <form className={classes.form} onSubmit={sendOrderHandler}>
 
-      <br />
-      <label value="Name">Email</label>
-      <br />
-      <input
-        placeholder="Email"
-        type="email"
-        id="email"
-        value={enteredEmailValue}
-        onChange={emailChangeHandler}
-        onBlur={emailInputBlurHandler}
-      />
-      <br />
-      <label value="Name">Postal Code</label>
-      <br />
-      <input
-        placeholder="Postal Code"
-        type="text"
-        id="Postal Code"
-        value={enteredPostalCodeValue}
-        onChange={enteredPostalCodeChangeHandler}
-        onBlur={enteredPostalCodeInputBlurHandler}
-      />
-      <br />
-      <label value="Name">City</label>
-      <br />
-      <input
-        placeholder="City"
-        type="text"
-        id="City"
-        value={enteredCityValue}
-        onChange={enteredCityChangeHandler}
-        onBlur={enteredCityInputBlurHandler}
-      />
-      <br />
-      <button type="button" onClick={props.onClose}> Cancel</button>
-      {formValid && <button onClick={sendOrderHandler}>Confirm </button>}
+      <div className={classes.control}>
+        <label value="Name"> Name</label>
 
-      {nameInputError && <p className={"error-text"}> Cannot be empty </p>}
-      {emailInputError && (
-        <p className={"error-text"}> Does not include "@" </p>
-      )}
-      {enteredPostalCodeInputError && (
-        <p className={"error-text"}> Has to be a number over 1 and under 6 </p>
-      )}
-      {enteredCityInputError && (
-        <p className={"error-text"}> Can't be empty </p>
-      )}
+        <input
+          placeholder="Name"
+          type="text"
+          id="name"
+          value={enteredNameValue}
+          onChange={nameChangeHandler}
+          onBlur={nameInputBlurHandler}
+        />
+      </div>
+
+      <div className={classes.control}>
+        <label value="Name">Email</label>
+
+        <input
+          placeholder="Email"
+          type="email"
+          id="email"
+          value={enteredEmailValue}
+          onChange={emailChangeHandler}
+          onBlur={emailInputBlurHandler}
+        />
+      </div>
+
+      <div className={classes.control}>
+        <label value="Name">Postal Code</label>
+
+        <input
+          placeholder="Postal Code"
+          type="text"
+          id="Postal Code"
+          value={enteredPostalCodeValue}
+          onChange={enteredPostalCodeChangeHandler}
+          onBlur={enteredPostalCodeInputBlurHandler}
+        />
+      </div>
+
+      <div className={classes.control}>
+        <label value="Name">City</label>
+
+        <input
+          placeholder="City"
+          type="text"
+          id="City"
+          value={enteredCityValue}
+          onChange={enteredCityChangeHandler}
+          onBlur={enteredCityInputBlurHandler}
+        />
+      </div>
+
+      <div className={classes.actions}>
+        <button type="button" onClick={props.onClose}>
+          {" "}
+          Cancel
+        </button>
+        {formValid && <button className={classes.submit}>Confirm </button>}
+      </div>
+
+      <div className={classes.invalid}>
+        {nameInputError && <label> Cannot be empty </label>}
+        {emailInputError && <label> Does not include "@" </label>}
+        {enteredPostalCodeInputError && (
+          <label> Has to be a number over 1 and under 6 </label>
+        )}
+        {enteredCityInputError && <label> Can't be empty </label>}
+      </div>
+      
     </form>
   );
 };
