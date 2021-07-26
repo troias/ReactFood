@@ -16,12 +16,6 @@ const Meals = (props) => {
       amount: amount,
       price: price
     })
-    // console.log({
-    //   id: id,
-    //   name: name, 
-    //   amount: amount,
-    //   price: price
-    // })
   }
 
   return (

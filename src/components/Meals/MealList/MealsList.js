@@ -1,10 +1,14 @@
 import { useEffect, useReducer } from "react";
 import Meals from "../MealItem/Meals";
-import { DUMMY_MEALS } from "../../../dummyMeals";
+import classes from "./MealsList.module.css"
+
 
 const intialReducerObj = {
   meals: {
-
+    price: 0, 
+    description: "", 
+    name: "", 
+    id: 1
   },
   loading: false,
   error: false,
@@ -22,7 +26,7 @@ const mealsReducer = (state, action) => {
     case "SET-MEALS":
       return {
         ...state,
-        meals: action.payload
+        meals: action.payload,
       };
 
     case "ERROR":
@@ -40,6 +44,7 @@ const mealsReducer = (state, action) => {
       return intialReducerObj;
   }
 };
+
 const MealsList = () => {
   const [state, dispatch] = useReducer(mealsReducer, intialReducerObj);
 
@@ -56,7 +61,7 @@ const MealsList = () => {
         );
 
         if (!req.ok) {
-          throw new Error("Something went wrong");
+          throw new Error();
         }
 
         const res = await req.json();
@@ -71,8 +76,7 @@ const MealsList = () => {
             description: res[key].description,
           });
 
-          console.log(loadedMeals)
-
+  
           dispatch({
             type: "SET-MEALS",
             payload: loadedMeals,
@@ -97,13 +101,16 @@ const MealsList = () => {
     getIntialMeals();
   }, []);
 
+  let meals = state.loaded &&
+        state.meals.map((meals) => {
+          return <Meals key={meals.id} props={meals} />;
+        })
+
   return (
     <div>
-      {state.loading && <p>Loading...</p>}
-      {state.error && <p> {state.error.message} </p>}
-      {state.loaded && state.meals.map((meals) => {
-        return <Meals key={meals.id} props={meals} />;
-      })}
+      {state.loading && <p className={classes.mealsLoading}>Loading...</p>}
+      {state.error && <p className={classes.mealsError}> {state.error} </p>}
+      {meals}
     </div>
   );
 };
