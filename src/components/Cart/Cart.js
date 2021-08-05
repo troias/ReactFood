@@ -14,13 +14,12 @@ const Cart = (props) => {
   const totalAmount = `$${cartCTX.totalAmount.toFixed(2)}`;
   const hasItems = cartCTX.items.length > 0;
 
-  // const hasOrderItems = orderCTX.items.length > 0
   const [confirmation, setConfirmation] = useState(false);
   const [success, setSuccess] = useState(false);
   const [valid, setValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  console.log("orderCTX", orderCTX);
+  console.log("items", cartCTX.items)
 
   const requestConfig = (order) => {
     return {
@@ -59,7 +58,7 @@ const Cart = (props) => {
       items: cartCTX.items,
       totalAmount: cartCTX.totalAmount,
     });
-    console.log("orderCTX.order", orderCTX.order);
+  
   };
 
   const orderCartItems = () => {
