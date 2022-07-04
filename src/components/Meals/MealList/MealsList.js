@@ -55,9 +55,9 @@ const MealsList = () => {
           type: "LOADING",
           payload: true,
         })
-
+        console.log("env", `${process.env.NEXT_PUBLIC_FIREBASE_API_URL}`)
         const req = await fetch(
-          process.env.NEXT_PUBLIC_FIREBASE_API_URL + "/meals.json",
+          `https://food-app-a635f-default-rtdb.firebaseio.com/meals.json`,
           {
             requestMode: "no-cors",
           }
